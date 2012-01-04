@@ -62,6 +62,13 @@ module Rql
         target.all(:order => orders)
       end
 
+      def select(*args)
+        results = args.delete(args[-1]) unless args[-1].kind_of?(String)
+        props = args.map(&:to_sym)
+        results ||= target
+        results.all(:fields => props).map{|d| d.to_hash.keep_if{|k,v| props.include?(k)}}
+      end
+
       private
       def parse_sort(str)
         match = str.match(/([+-])(\w+)/)

@@ -62,6 +62,10 @@ module Rql
       def limit(count, start, results=target)
         raise NotImplementedError
       end
+
+      def select(*args)
+        raise NotImplementedError
+      end
     end
   end
 end
