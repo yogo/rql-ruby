@@ -9,12 +9,10 @@ module Rack
 
     def call(env)
       req = Rack::Request.new(env)
-      qs = req.query_string
-
+      #strip any API key so that the query will parse correctly
+      qs = req.query_string.split('&').select{|q| !(q =~ /api_key/) }.join('&')
       unless qs.empty?
         begin
-          #strip any API key so that the query will parse correctly
-          qs = qs.split('&').select{|q| !(q =~ /api_key/) }.join('&')
           env['rql.query'] = Rql[qs]
         rescue => e
           env['rql.error'] = e
