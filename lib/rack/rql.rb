@@ -14,7 +14,8 @@ module Rack
       unless qs.empty?
         begin
           #strip any API key so that the query will parse correctly
-          env['rql.query'] = Rql[qs.gsub(/api_key=\w*&/,'')]
+          qs = qs.split('&').select{|q| !(q =~ /api_key/) }.join('&')
+          env['rql.query'] = Rql[qs]
         rescue => e
           env['rql.error'] = e
         end
